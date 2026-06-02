@@ -1,7 +1,15 @@
 import axios from 'axios';
 
+let baseURL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+
+// Robust check: if the environment variable is provided but misses the "/api" suffix,
+// automatically append it so that endpoints like "/auth/login" map correctly.
+if (baseURL && !baseURL.endsWith('/api') && !baseURL.endsWith('/api/')) {
+  baseURL = baseURL.endsWith('/') ? `${baseURL}api` : `${baseURL}/api`;
+}
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8000/api',
+  baseURL,
 });
 
 api.interceptors.request.use((config) => {
